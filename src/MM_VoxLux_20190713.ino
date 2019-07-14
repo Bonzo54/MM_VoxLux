@@ -322,73 +322,71 @@ void DisplayWrite()
 
 void ControlLED()
 {
-  if(cntrlPntr==1)
+  switch(cntrlPntr)
   {
-    uint8_t x = 0;
-    while(x < stripsLED)
-    {
-      uint16_t led_length = map(analogVal[x], 0, 1023, 0, halfLEDS);
-      uint8_t start = halfLEDS - led_length;
-      uint8_t finish = halfLEDS + led_length;
-
-      for (uint8_t y = 0; y < numLEDS; y++)
-      {
-        leds[x][y].fadeToBlackBy(128);
-      }
-      for (uint8_t y = start; y < finish; y++)
-      {
-        leds[x][y] = ColorSet(analogVal[x], x);
-      }
-      x++;
-    }
-  }
-  if(cntrlPntr==2)
-  {
-    for (uint8_t x = 0; x < stripsLED; x++)
-    {
-      uint16_t led_length = map(analogVal[x], 0, 1023, 0, halfLEDS);
-      uint8_t finish = numLEDS - led_length;
-
-      for (uint8_t y = 0; y < numLEDS; y++)
-      {
-        leds[x][y].fadeToBlackBy(128);
-      }
-      for (uint8_t y = 0; y < led_length; y++)
-      {
-        leds[x][y] = ColorSet(analogVal[x], x);
-      }
-      for (uint8_t y = numLEDS - 1; y >= finish; y--)
-      {
-        leds[x][y] = ColorSet(analogVal[x], x);
-      }
-    }
-  }
-  if(cntrlPntr==3)
-  {
-    if(millis() - lastUpdateTime > updateTime)
-    {
+    case 1:
       for (uint8_t x = 0; x < stripsLED; x++)
       {
-        for (uint8_t y = 0; y < halfLEDS - 1; y++)
+        uint16_t led_length = map(analogVal[x], 0, 1023, 0, halfLEDS);
+        uint8_t start = halfLEDS - led_length;
+        uint8_t finish = halfLEDS + led_length;
+
+        for (uint8_t y = 0; y < numLEDS; y++)
         {
-          leds[x][y] = leds[x][y + 1];
+          leds[x][y].fadeToBlackBy(128);
         }
-
-        leds[x][halfLEDS - 1] = ColorSet(analogVal[x], x);
-
-        for (uint8_t y = numLEDS - 1; y > halfLEDS; y--)
+        for (uint8_t y = start; y < finish; y++)
         {
-          leds[x][y] = leds[x][y - 1];
+          leds[x][y] = ColorSet(analogVal[x], x);
         }
-
-        leds[x][halfLEDS] = ColorSet(analogVal[x], x);
       }
+      break;
+    case 2:
+      for (uint8_t x = 0; x < stripsLED; x++)
+      {
+        uint16_t led_length = map(analogVal[x], 0, 1023, 0, halfLEDS);
+        uint8_t finish = numLEDS - led_length;
+
+        for (uint8_t y = 0; y < numLEDS; y++)
+        {
+          leds[x][y].fadeToBlackBy(128);
+        }
+        for (uint8_t y = 0; y < led_length; y++)
+        {
+          leds[x][y] = ColorSet(analogVal[x], x);
+        }
+        for (uint8_t y = numLEDS - 1; y >= finish; y--)
+        {
+          leds[x][y] = ColorSet(analogVal[x], x);
+        }
+      }
+      break;
+    case 3:
+      if(millis() - lastUpdateTime > updateTime)
+      {
+        for (uint8_t x = 0; x < stripsLED; x++)
+        {
+          for (uint8_t y = 0; y < halfLEDS - 1; y++)
+          {
+            leds[x][y] = leds[x][y + 1];
+          }
+
+          leds[x][halfLEDS - 1] = ColorSet(analogVal[x], x);
+
+          for (uint8_t y = numLEDS - 1; y > halfLEDS; y--)
+          {
+            leds[x][y] = leds[x][y - 1];
+          }
+
+          leds[x][halfLEDS] = ColorSet(analogVal[x], x);
+        }
       lastUpdateTime=millis();
-    }
-  }
-  if(cntrlPntr==4)
-  {
+      }
+      break;
+    if(cntrlPntr==4)
+    {
     //for()
+    }
   }
 }
 
